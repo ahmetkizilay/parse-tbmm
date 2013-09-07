@@ -1,0 +1,15 @@
+{
+    "name": "parse-tbmm",
+    "description": "some methods to parse data from TBMM website",
+    "version": "0.0.0",
+    "private": true,
+    "author": {
+        "name": "Ahmet Kizilay",
+        "url": "https://github.com/artsince"
+    },
+    "licence": "MIT",
+    "dependencies": {
+        "htmlparser": ">= 1.7.6",
+        "soupselect": ">= 0.2.0"
+    }
+}
