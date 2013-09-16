@@ -5,7 +5,8 @@
     var url = require('url'),
         htmlParser = require('htmlparser'),
         http = require('http'),
-        select = require('soupselect').select,
+        domSelector = require('./dom-selector'),
+        encoder = require('./encoders'),
         link = 'http://www.tbmm.gov.tr/develop/owa/milletvekillerimiz_sd.mv_liste?p_donem_kodu=24',
         reqOptions = url.parse(link),
         req, urlHandler, urlParser;
@@ -15,13 +16,9 @@
                 throw err;
             }
 
-            // there should be only one...
-            select(dom, 'div.grid_12').forEach(function (item){
-                item.children.forEach(function (child) {
-                    if(child.name === "TABLE") {
-                        console.log(child.children);
-                    }
-                });
+            var mvList = domSelector.start(dom).any('div', {'class': 'grid_12'}).any('TABLE').any('TR').any('TD').any('A').end();
+            mvList.forEach(function (mv) {
+                console.log(mv.children[0].data);
             });
         });
 
@@ -32,7 +29,22 @@
                 throw {code: res.statusCode};
             }
 
+            var content_type = null;
+            res.setEncoding('utf-8');
+            if(res.headers['content-type']) {
+                // console.log(res.headers['content-type']);
+                var encMatchResult = res.headers['content-type'].match(/charset=([^;]*)([;]+|$)/);
+                if(encMatchResult !== null && encMatchResult.length > 1 && encMatchResult[1].toLowerCase().indexOf('utf') < 0) {
+                    content_type = encMatchResult[1].toLowerCase();
+                    res.setEncoding('binary');
+                }
+
+            }
+
             res.on('data', function (chunk) {
+                if(content_type) {
+                    chunk = encoder(content_type).toUTF8(chunk);
+                }
                 urlParser.parseChunk(chunk);
             });
 
