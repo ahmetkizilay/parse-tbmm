@@ -6,7 +6,7 @@
         htmlParser = require('htmlparser'),
         http = require('http'),
         domSelector = require('./dom-selector'),
-        encoder = require('./encoders'),
+        encoder = require('turkish-char-encoding'),
         link = 'http://www.tbmm.gov.tr/develop/owa/milletvekillerimiz_sd.mv_liste?p_donem_kodu=24',
         reqOptions = url.parse(link),
         req, urlHandler, urlParser;

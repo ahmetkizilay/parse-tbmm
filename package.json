@@ -9,6 +9,7 @@
     },
     "licence": "MIT",
     "dependencies": {
-        "htmlparser": ">= 1.7.6"
+        "htmlparser": ">= 1.7.6",
+        "turkish-char-encoding": ">= 0.0.0"
     }
 }
