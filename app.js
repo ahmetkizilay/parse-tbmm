@@ -7,7 +7,7 @@
         http = require('http'),
         domSelector = require('./dom-selector'),
         encoder = require('turkish-char-encoding'),
-        link = 'http://www.tbmm.gov.tr/develop/owa/milletvekillerimiz_sd.mv_liste?p_donem_kodu=24',
+        link = 'http://www.tbmm.gov.tr/develop/owa/milletvekillerimiz_sd.mv_liste?p_donem_kodu=1',
         reqOptions = url.parse(link),
         req, urlHandler, urlParser;
 
@@ -18,7 +18,12 @@
 
             var mvList = domSelector.start(dom).any('div', {'class': 'grid_12'}).any('TABLE').any('TR').any('TD').any('A').end();
             mvList.forEach(function (mv) {
-                console.log(mv.children[0].data);
+                // ok, being a maverick here...
+                var link = mv.attribs['href'] || mv.attribs['HREF'],
+                    regNo = link.match(/.*p_sicil=(\d+).*/)[1],
+                    name = mv.children[0].data;
+
+                console.log(regNo + ': ' + name);
             });
         });
 
