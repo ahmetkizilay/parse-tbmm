@@ -9,7 +9,8 @@
         encoder = require('turkish-char-encoding'),
         link = 'http://www.tbmm.gov.tr/develop/owa/milletvekillerimiz_sd.mv_liste?p_donem_kodu=1',
         reqOptions = url.parse(link),
-        req, urlHandler, urlParser;
+        req, urlHandler, urlParser,
+        mvArray = [];
 
         urlHandler = new htmlParser.DefaultHandler(function (err, dom) {
             if(err) {
@@ -23,8 +24,14 @@
                     regNo = link.match(/.*p_sicil=(\d+).*/)[1],
                     name = mv.children[0].data;
 
-                console.log(regNo + ': ' + name);
+                mvArray.push({
+                    "sicil": regNo,
+                    "isim": name,
+                    "donem": -1
+                });
             });
+
+            console.log(JSON.stringify(mvArray, null, ' '));
         });
 
         urlParser = new htmlParser.Parser(urlHandler);
